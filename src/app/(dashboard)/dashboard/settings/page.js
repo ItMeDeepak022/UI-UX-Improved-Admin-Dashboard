@@ -235,7 +235,7 @@ export default function SettingsPage() {
               {/* Toggle Switch */}
               <button
                 onClick={() => setTwoFactor(!twoFactor)}
-                className={`w-11 h-6 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
+                className={`sm:w-11 sm:h-6 w-15 h-5 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
                   twoFactor ? 'bg-black' : 'bg-gray-300'
                 }`}
               >
@@ -325,7 +325,7 @@ export default function SettingsPage() {
               </div>
               <button
                 onClick={() => setEmailAlerts(!emailAlerts)}
-                className={`w-11 h-6 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
+                className={` sm:w-11 sm:h-6 w-15 h-5 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
                   emailAlerts ? 'bg-black' : 'bg-gray-300'
                 }`}
               >
@@ -350,7 +350,7 @@ export default function SettingsPage() {
               </div>
               <button
                 onClick={() => setSecurityAlerts(!securityAlerts)}
-                className={`w-11 h-6 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
+                className={` sm:w-11 sm:h-6 w-15 h-5 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
                   securityAlerts ? 'bg-black' : 'bg-gray-300'
                 }`}
               >
@@ -375,7 +375,7 @@ export default function SettingsPage() {
               </div>
               <button
                 onClick={() => setPushNotifications(!pushNotifications)}
-                className={`w-11 h-6 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
+                className={` sm:w-11 sm:h-6 w-15 h-5 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
                   pushNotifications ? 'bg-black' : 'bg-gray-300'
                 }`}
               >

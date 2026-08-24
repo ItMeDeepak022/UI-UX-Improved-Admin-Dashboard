@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }) {
         <Header showhide={showhide} />
 
         {/* Page Content */}
-        <main className="flex-1 sm:p-6 p-4">
+        <main className="flex-1 sm:p-6 p-2">
           {children}
         </main>
 
