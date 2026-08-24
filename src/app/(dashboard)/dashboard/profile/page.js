@@ -395,7 +395,7 @@ export default function ProfilePage() {
         </div>
 
         {/* 4. Footer Action Buttons (Cancel, Save as Draft, Save & Continue) */}
-        <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-gray-100">
+        <div className="flex sm:flex-wrap flex-row sm:items-center sm:justify-start gap-3 pt-4 border-t border-gray-100">
           {/* Cancel */}
           <button
             type="button"

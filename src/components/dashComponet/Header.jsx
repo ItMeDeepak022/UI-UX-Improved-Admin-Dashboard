@@ -7,7 +7,7 @@ export default function Header({ showhide, onMenuToggle }) {
   const handleToggle = showhide || onMenuToggle;
 
   return (
-    <header className="sticky top-0 sm:h-16 h-15 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 z-30">
+    <header className="sticky top-0 sm:h-16 h-15 bg-white border-b border-gray-200 flex items-center justify-between px-2.5 sm:px-6 z-30">
       {/* 1. Left Side: Hamburger (Mobile) + Search Bar */}
       <div className="flex items-center gap-3">
         {/* Mobile Hamburger Button */}
@@ -16,7 +16,7 @@ export default function Header({ showhide, onMenuToggle }) {
           className="sm:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
           aria-label="Toggle Menu"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-8 h-8" />
         </button>
 
         {/* Search Bar */}
