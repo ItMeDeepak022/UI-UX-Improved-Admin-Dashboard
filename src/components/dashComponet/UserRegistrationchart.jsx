@@ -21,7 +21,7 @@ const data = [
 
 export default function UserRegistrationChart() {
     return (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-2 sm:p-6">
             <h2 className="text-lg font-semibold mb-5">
                 User Registrations
             </h2>
