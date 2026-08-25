@@ -4,19 +4,44 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Zod Schema for Register Validation
+const registerSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, 'Full name is required')
+    .min(2, 'Name must be at least 2 characters'),
+
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+});
 
 export default function Register() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    mode: 'onChange',
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Simulate registration and redirect to dashboard
+  const onSubmit = (data) => {
+    console.log('Registration submitted:', data);
+    // Simulate successful registration and redirect to dashboard
     router.push('/dashboard');
   };
 
@@ -26,82 +51,107 @@ export default function Register() {
       <div className="w-full max-w-[1120px] bg-white rounded-none md:rounded-3xl shadow-none md:shadow-2xl md:border border-gray-100 overflow-hidden grid grid-cols-1 lg:grid-cols-2 min-h-[640px]">
         
         {/* ================= LEFT SIDE: REGISTER FORM ================= */}
-        <div className="p-8 sm:p-12 md:p-5 flex flex-col justify-center max-w-md mx-auto w-full">
+        <div className="p-8 sm:p-12 md:p-8 flex flex-col justify-center max-w-md mx-auto w-full">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
               Create an account
             </h1>
             <p className="text-xs sm:text-sm text-gray-500 mt-2.5 leading-relaxed">
-              Start your  trial with{' '}
-              <strong className="text-gray-800 font-semibold">Demo App</strong>. No credit card required.
+              Start your free trial with{' '}
+              <strong className="text-indigo-600 font-semibold">Demo App</strong>. No credit card required.
             </p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
             {/* Full Name Input */}
             <div>
               <input
                 type="text"
-                required
                 placeholder="Full Name"
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                className="w-full px-5 py-3.5 rounded-full border border-gray-300 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                {...register('fullName')}
+                className={`w-full px-5 py-3.5 rounded-full border text-sm text-gray-800 placeholder-gray-400 outline-none transition-all ${
+                  errors.fullName
+                    ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                    : 'border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600'
+                }`}
               />
+              {errors.fullName && (
+                <p className="text-red-500 text-xs mt-1.5 ml-3 font-medium">
+                  {errors.fullName.message}
+                </p>
+              )}
             </div>
 
-            {/* Email / Username Input */}
+            {/* Email Input */}
             <div>
               <input
                 type="email"
-                required
                 placeholder="Email Address"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-5 py-3.5 rounded-full border border-gray-300 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
+                {...register('email')}
+                className={`w-full px-5 py-3.5 rounded-full border text-sm text-gray-800 placeholder-gray-400 outline-none transition-all ${
+                  errors.email
+                    ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                    : 'border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600'
+                }`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1.5 ml-3 font-medium">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password Input with Show/Hide Toggle */}
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                required
-                placeholder="Create Password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-5 py-3.5 pr-12 rounded-full border border-gray-300 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
-                aria-label="Toggle password visibility"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+            <div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Create Password"
+                  {...register('password')}
+                  className={`w-full px-5 py-3.5 pr-12 rounded-full border text-sm text-gray-800 placeholder-gray-400 outline-none transition-all ${
+                    errors.password
+                      ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                      : 'border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600 p-1 cursor-pointer transition-colors"
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {errors.password && (
+                <p className="text-red-500 text-xs mt-1.5 ml-3 font-medium">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Terms text */}
             <p className="text-[11px] text-gray-500 pt-1 leading-normal">
               By creating an account, you agree to our{' '}
-              <a href="#" className="text-black font-semibold hover:underline">
+              <a href="#" className="text-indigo-600 font-semibold hover:underline">
                 Terms of Service
               </a>{' '}
               and{' '}
-              <a href="#" className="text-black font-semibold hover:underline">
+              <a href="#" className="text-indigo-600 font-semibold hover:underline">
                 Privacy Policy
               </a>.
             </p>
 
-            {/* Register Button (Black Pill) */}
+            {/* Register Button */}
             <button
               type="submit"
-              className="w-full py-3.5 px-6 rounded-full bg-black hover:bg-gray-800 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer mt-2"
+              disabled={isSubmitting}
+              className="w-full py-3.5 px-6 rounded-full bg-blue-700 hover:bg-blue-800 text-white font-semibold text-sm shadow-md shadow-indigo-600/30 hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer mt-2 disabled:opacity-50"
             >
-              Create Account
+              {isSubmitting ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
 
@@ -115,25 +165,25 @@ export default function Register() {
             </div>
           </div>
 
-          {/* Social Icons (Black Circles) */}
+          {/* Social Icons (Indigo styled buttons) */}
           <div className="flex items-center justify-center gap-4">
             <button
               type="button"
-              className="w-11 h-11 rounded-full bg-black hover:bg-gray-800 text-white flex items-center justify-center text-sm font-bold shadow-xs hover:scale-105 transition-all cursor-pointer"
+              className="w-11 h-11 rounded-full bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white border border-indigo-100 flex items-center justify-center text-sm font-bold shadow-2xs hover:scale-105 transition-all cursor-pointer"
             >
               G
             </button>
 
             <button
               type="button"
-              className="w-11 h-11 rounded-full bg-black hover:bg-gray-800 text-white flex items-center justify-center text-sm font-bold shadow-xs hover:scale-105 transition-all cursor-pointer"
+              className="w-11 h-11 rounded-full bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white border border-indigo-100 flex items-center justify-center text-sm font-bold shadow-2xs hover:scale-105 transition-all cursor-pointer"
             >
               t
             </button>
 
             <button
               type="button"
-              className="w-11 h-11 rounded-full bg-black hover:bg-gray-800 text-white flex items-center justify-center text-sm font-bold shadow-xs hover:scale-105 transition-all cursor-pointer"
+              className="w-11 h-11 rounded-full bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white border border-indigo-100 flex items-center justify-center text-sm font-bold shadow-2xs hover:scale-105 transition-all cursor-pointer"
             >
               f
             </button>
@@ -142,7 +192,7 @@ export default function Register() {
           {/* Footer link to Login */}
           <p className="text-center text-xs text-gray-500 mt-6">
             Already have an account?{' '}
-            <Link href="/login" className="font-semibold text-black hover:underline">
+            <Link href="/login" className="font-semibold text-indigo-600 hover:underline">
               Log in
             </Link>
           </p>
@@ -203,21 +253,19 @@ export default function Register() {
                   <path d="M145 195 Q135 190 125 200 Q135 208 145 195" fill="#FFE4C4" stroke="#111827" strokeWidth="2.5" />
                 </svg>
               </div>
-
-             
             </div>
 
             {/* Bottom Content */}
             <div className="w-full text-center space-y-4 pt-6">
               <div className="flex items-center justify-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
-                <span className="w-4 h-1.5 rounded-full bg-black" />
+                <span className="w-4 h-1.5 rounded-full bg-indigo-600" />
                 <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
               </div>
 
               <h3 className="text-base font-bold text-gray-900 tracking-tight">
                 Make your work easier and organized <br />
-                with <span className="font-extrabold">Demo App</span>
+                with <span className="font-extrabold text-indigo-600">Demo App</span>
               </h3>
             </div>
 
@@ -228,4 +276,3 @@ export default function Register() {
     </div>
   );
 }
-
